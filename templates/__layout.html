@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ title }}</title>
+    <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
 <ul class="mainmenu">
 <li><a class="py-2 d-none d-md-inline-block default_pointer_cs" href="/register">Reg</a></li>
 <li><a class="py-2 d-none d-md-inline-block default_pointer_cs" href="/">Main</a></li>
+<li><a class="py-2 d-none d-md-inline-block default_pointer_cs" href="/login">login</a></li>
 </ul>
 
 <div>
