@@ -1,0 +1,13 @@
+{% extends '__layout.html' %}
+
+{% block content %}
+<form method="post">
+        <input type="text" name="name" class="form-control" placeholder="Введіть ім'я" value="" required=""><br>
+        <input type="text" name="old" class="form-control" placeholder="Введіть вік" value="" required=""><br>
+        <input type="text" name="city" class="form-control" placeholder="Введіть місто"  required=""><br>
+        <input type="text" name="email" class="form-control" placeholder="повтори пошту"  required=""><br>
+        <input type="password" name="psw" class="form-control" placeholder="Введіть пароль"  required=""><br>
+        <input type="password" name="psw2" id="return_password" class="form-control" placeholder="повтори пароль"  required=""><br>
+        <input type="submit" class="btn btn-success" value="Реєстрація">
+</form>
+{% endblock %}
