@@ -5,7 +5,6 @@ from datetime import datetime
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
 
@@ -36,8 +35,6 @@ class Profiles(db.Model):
         return f'<profiles self.user_id>'
 
 
-
-
 @app.route('/')
 def index():
     info = []
@@ -59,11 +56,12 @@ def login_page():
 
             if user and check_password_hash(user.psw, psw):
                 login_user(user)
+                return redirect({{ url_for('index') }})
 
             else:
                 return "неправельний пароль або пошта"
         else:
-            return 'будь ласка введіть праввельний пароль'
+            return 'будь ласка введіть правильний пароль'
     else:
         return render_template('login.html')
 
@@ -77,7 +75,7 @@ def register():
             db.session.add(u)
             db.session.flush()
 
-            p = Profiles(name=request.form['name'], old=request.form['old'], city=request.form['city'], user_id = u.id)
+            p = Profiles(name=request.form['name'], old=request.form['old'], city=request.form['city'], user_id=u.id)
 
             db.session.add(p)
             db.session.commit()
@@ -91,4 +89,3 @@ def register():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
