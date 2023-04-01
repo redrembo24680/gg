@@ -93,6 +93,7 @@ def profile():
     info = []
     try:
         info = Users.query.all()
+
     except:
         print("помилка при читанні")
     return render_template("profile.html", list=info)
