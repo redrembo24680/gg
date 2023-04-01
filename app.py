@@ -6,9 +6,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
-__login = LoginManager(app)
-
 db = SQLAlchemy(app)
+login_manager = LoginManager(app)
 
 
 class Users(UserMixin, db.Model):
@@ -47,6 +46,7 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
+    form = Users()
     if request.method == 'POST':
         email = request.form.get('email')
         psw = request.form.get('psw')
@@ -56,7 +56,7 @@ def login_page():
 
             if user and check_password_hash(user.psw, psw):
                 login_user(user)
-                return redirect({{ url_for('index') }})
+                return redirect(url_for('index'))
 
             else:
                 return "неправельний пароль або пошта"
