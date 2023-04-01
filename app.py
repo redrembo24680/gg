@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -11,7 +11,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
 db = SQLAlchemy(app)
 
 
-class Users(db.Model):
+class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), nullable=False)
     psw = db.Column(db.String(100), nullable=False)
@@ -20,7 +20,7 @@ class Users(db.Model):
     pr = db.relationship('Profiles', backref='users', uselist=False)
 
     def __repr__(self):
-        return f'<users self.user_id>'
+        return f'<users self.id>'
 
 
 class Profiles(db.Model):
