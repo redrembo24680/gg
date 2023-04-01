@@ -6,8 +6,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SECRET_KEY'] = "SECRET_KEY"
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.filter_by(id=user_id).first()
 
 
 class Users(UserMixin, db.Model):
@@ -36,17 +42,11 @@ class Profiles(db.Model):
 
 @app.route('/')
 def index():
-    info = []
-    try:
-        info = Users.query.all()
-    except:
-        print("помилка при читанні")
-    return render_template("index.html", list=info)
+    return render_template("index.html")
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
-    form = Users()
     if request.method == 'POST':
         email = request.form.get('email')
         psw = request.form.get('psw')
@@ -85,6 +85,25 @@ def register():
             print("помилка")
 
     return render_template("register.html")
+
+
+@app.route('/profile')
+@login_required
+def profile():
+    info = []
+    try:
+        info = Users.query.all()
+    except:
+        print("помилка при читанні")
+    return render_template("profile.html", list=info)
+
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login_page'))
 
 
 if __name__ == "__main__":
