@@ -1,3 +1,4 @@
+from pprint import pprint
 from flask import Flask, render_template, url_for, request, redirect
 from flask_login import login_user, login_required, logout_user, UserMixin, LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -24,8 +25,8 @@ class Users(UserMixin, db.Model):
 
     pr = db.relationship('Profiles', backref='users', uselist=False)
 
-    def __repr__(self):
-        return f'<users self.id>'
+    # def __repr__(self):
+    #     return f'<users self.id>'
 
 
 class Profiles(db.Model):
@@ -36,8 +37,6 @@ class Profiles(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __repr__(self):
-        return f'<profiles self.id>'
 
 
 @app.route('/')
@@ -71,13 +70,13 @@ def register():
     if request.method == 'POST':
         try:
             hash = generate_password_hash(request.form['psw'])
-            u = Users(email=request.form['email'], psw=hash)
+            p = Profiles(name=request.form['name'], old=request.form['old'], city=request.form['city'])
+            u = Users(email=request.form['email'], psw=hash, pr=p)
+            
+            db.session.add(p)
             db.session.add(u)
             db.session.flush()
 
-            p = Profiles(name=request.form['name'], old=request.form['old'], city=request.form['city'], id=u.id)
-
-            db.session.add(p)
             db.session.commit()
 
         except:
@@ -93,7 +92,9 @@ def profile():
     info = []
     try:
         info = Users.query.all()
-
+        
+        # Uncomment to see true magic)
+        # [ pprint(x.pr.__dict__) for x in info ]
     except:
         print("помилка при читанні")
     return render_template("profile.html", list=info)
