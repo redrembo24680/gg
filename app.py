@@ -1,12 +1,12 @@
 from flask import Flask, render_template, url_for, request, redirect
-from flask_login import login_user, login_required, logout_user, UserMixin
+from flask_login import login_user, login_required, logout_user, UserMixin, LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+__login = LoginManager(app)
 
 db = SQLAlchemy(app)
 
@@ -32,7 +32,7 @@ class Profiles(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):
-        return f'<profiles self.user_id>'
+        return f'<profiles self.id>'
 
 
 @app.route('/')
@@ -75,7 +75,7 @@ def register():
             db.session.add(u)
             db.session.flush()
 
-            p = Profiles(name=request.form['name'], old=request.form['old'], city=request.form['city'], user_id=u.id)
+            p = Profiles(name=request.form['name'], old=request.form['old'], city=request.form['city'], id=u.id)
 
             db.session.add(p)
             db.session.commit()
